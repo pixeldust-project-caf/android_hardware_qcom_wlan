@@ -74,26 +74,42 @@ int wpa_driver_nl80211_driver_cmd(void *priv, char *cmd, char *buf,
 				  size_t buf_len )
 {
 	struct i802_bss *bss = priv;
-	struct wpa_driver_nl80211_data *drv = bss->drv;
+	struct wpa_driver_nl80211_data *drv = NULL;
 	struct wpa_driver_nl80211_data *driver;
 	struct ifreq ifr;
 	android_wifi_priv_cmd priv_cmd;
 	int ret = 0, status = 0;
 	static wpa_driver_oem_cb_table_t oem_cb_table = {NULL};
 
+	if (bss) {
+		drv = bss->drv;
+	} else {
+		if (os_strncasecmp(cmd, "SET_AP_SUSPEND", 14)) {
+			wpa_printf(MSG_ERROR, "%s: bss is NULL for cmd %s\n",
+				   __func__, cmd);
+			return -EINVAL;
+		}
+	}
+
 	if (wpa_driver_oem_initialize(&oem_cb_table) !=
 		WPA_DRIVER_OEM_STATUS_FAILURE) {
 		ret = oem_cb_table.wpa_driver_driver_cmd_oem_cb(
 				priv, cmd, buf, buf_len, &status);
 		if (ret == WPA_DRIVER_OEM_STATUS_SUCCESS ) {
-			return 0;
+			return strlen(buf);
 		} else if ((ret == WPA_DRIVER_OEM_STATUS_FAILURE) &&
 							 (status != 0)) {
 			wpa_printf(MSG_DEBUG, "%s: Received error: %d",
 					__func__, ret);
-			return ret;
+			return -1;
 		}
 		/* else proceed with legacy handling as below */
+	}
+
+	if (!drv) {
+		wpa_printf(MSG_ERROR, "%s: drv is NULL for cmd %s\n",
+			   __func__, cmd);
+		return -EINVAL;
 	}
 
 	if (os_strcasecmp(cmd, "START") == 0) {

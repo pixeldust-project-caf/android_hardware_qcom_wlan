@@ -106,7 +106,11 @@ wifi_error ring_buffer_write(struct rb_info *rb_info, u8 *buf, size_t length,
         return WIFI_ERROR_UNKNOWN;
     }
 
-    rb_info->written_records += no_of_records;
+    if (rb_info->written_records < (UINT_MAX - 1))
+        rb_info->written_records += no_of_records;
+    else
+        rb_info->written_records = 0;
+
     return WIFI_SUCCESS;
 }
 
@@ -117,7 +121,7 @@ void push_out_rb_data(void *cb_ctx)
     wifi_ring_buffer_status rbs;
     wifi_ring_buffer_data_handler handler;
 
-    while (1) {
+    while (info && !info->clean_up) {
         size_t length = 0;
         u8 *buf;
 
