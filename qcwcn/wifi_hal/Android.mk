@@ -48,16 +48,14 @@ LOCAL_CLANG_CFLAGS := -Wno-pointer-bool-conversion
 LOCAL_CFLAGS += -Wall -Werror
 
 # Allow implicit fallthrough in nan_ind.cpp:834 until it is fixed.
-LOCAL_CFLAGS += -Wno-error=implicit-fallthrough
+LOCAL_CFLAGS += -Wno-implicit-fallthrough
 
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH) \
 	external/libnl/include \
 	$(call include-path-for, libhardware_legacy)/hardware_legacy \
 	external/wpa_supplicant_8/src/drivers \
-	$(TARGET_OUT_HEADERS)/libwpa_client \
 	$(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include \
-	$(TARGET_OUT_HEADERS)/cld80211-lib
 
 LOCAL_SRC_FILES := \
 	list.cpp \
@@ -114,16 +112,14 @@ endif
 LOCAL_CLANG_CFLAGS := -Wno-pointer-bool-conversion
 
 # Allow implicit fallthrough in nan_ind.cpp:834 until it is fixed.
-LOCAL_CFLAGS += -Wno-error=implicit-fallthrough
+LOCAL_CFLAGS += -Wno-implicit-fallthrough
 
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH) \
 	external/libnl/include \
 	$(call include-path-for, libhardware_legacy)/hardware_legacy \
 	external/wpa_supplicant_8/src/drivers \
-	$(TARGET_OUT_HEADERS)/libwpa_client \
 	$(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include \
-	$(TARGET_OUT_HEADERS)/cld80211-lib
 
 LOCAL_SRC_FILES := \
 	list.cpp \
